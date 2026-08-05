@@ -48,6 +48,14 @@ const run = async () =>{
 
     })
 
+    // 3: post api for add facility
+
+    app.post('/facilities', async(req, res) =>{
+      const doc = req.body;
+      const result = await facilitiesCollection.insertOne(doc);
+      res.send(result)
+    })
+
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
