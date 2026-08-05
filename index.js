@@ -38,7 +38,16 @@ const run = async () =>{
       const result = await cursor.toArray();
       res.send(result);
     })
-    
+
+    // 2: get data from database by id
+    app.get('/facilities/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await facilitiesCollection.findOne(query);
+      res.send(result);
+
+    })
+
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
