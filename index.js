@@ -29,6 +29,7 @@ const run = async () =>{
 
     const db = client.db("SportBook");
     const facilitiesCollection = db.collection("facilitiesCollection");
+    const bookingCollection = db.collection("bookingCollection");
     // Send a ping to confirm a successful connection
     // const result = await client.db('admin').command({ ping: 1 });
 
@@ -54,6 +55,14 @@ const run = async () =>{
       const doc = req.body;
       const result = await facilitiesCollection.insertOne(doc);
       res.send(result)
+    })
+
+    // 4: post api for booking data
+
+    app.post('/bookings', async(req, res) =>{
+      const doc = req.body;
+      const result = await bookingCollection.insertOne(doc);
+      res.send(result);
     })
 
     console.log(
