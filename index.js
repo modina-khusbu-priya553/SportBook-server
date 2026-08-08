@@ -61,8 +61,20 @@ const run = async () =>{
 
     app.post('/bookings', async(req, res) =>{
       const doc = req.body;
-      const result = await bookingCollection.insertOne(doc);
+      const bookingData ={...doc, status: "pending",}
+      const result = await bookingCollection.insertOne(bookingData);
       res.send(result);
+    })
+
+
+    // 5:: get api for booking data
+
+    app.get('/bookings/:userId', async(req, res) =>{
+      const userId = req.params.userId;
+      const cursor = bookingCollection.find({userId:userId})
+      const result = await cursor.toArray();
+      res.send(result);
+
     })
 
     console.log(
