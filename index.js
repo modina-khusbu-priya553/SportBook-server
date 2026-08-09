@@ -22,8 +22,8 @@ const client = new MongoClient(uri, {
   },
 });
 
-const run = async () =>{
-     try {
+const run = async () => {
+  try {
     // Connect the client to the server (optional starting in v4.7)
     // await client.connect();
 
@@ -43,7 +43,7 @@ const run = async () =>{
     // 2: get data from database by id
     app.get('/facilities/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) }
       const result = await facilitiesCollection.findOne(query);
       res.send(result);
 
@@ -51,7 +51,7 @@ const run = async () =>{
 
     // 3: post api for add facility
 
-    app.post('/facilities', async(req, res) =>{
+    app.post('/facilities', async (req, res) => {
       const doc = req.body;
       const result = await facilitiesCollection.insertOne(doc);
       res.send(result)
@@ -59,23 +59,39 @@ const run = async () =>{
 
     // 4: post api for booking data
 
-    app.post('/bookings', async(req, res) =>{
-      const doc = req.body;
-      const bookingData ={...doc, status: "pending",}
-      const result = await bookingCollection.insertOne(bookingData);
-      res.send(result);
+    app.post('/bookings', async (req, res) => {
+      try {
+        const doc = req.body;
+        delete doc.status;
+        delete doc._id;
+        const bookingData = {
+          ...doc,
+          status: "pending",
+          createdAt: new Date(),
+        };
+        const result = await bookingCollection.insertOne(bookingData);
+        res.send(result);
+      } catch (error) { res.status(500).json({ message: error.message }); }
+
     })
 
 
     // 5:: get api for booking data
 
-    app.get('/bookings/:userId', async(req, res) =>{
+    app.get('/bookings/:userId', async (req, res) => {
       const userId = req.params.userId;
-      const cursor = bookingCollection.find({userId:userId})
+      const cursor = bookingCollection.find({ userId: userId })
       const result = await cursor.toArray();
       res.send(result);
 
     })
+
+    // 6: delete bookings
+    app.delete('/bookings/:userId', async(req, res) => {
+      const userId = req.params.userId;
+      const result = bookingCollection.deleteOne({ userId: userId })
+      res.send(result);
+    }) 
 
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
