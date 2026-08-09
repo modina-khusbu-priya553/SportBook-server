@@ -92,11 +92,14 @@ const run = async () => {
     })
 
     // 6: delete bookings
-    app.delete('/bookings/:bookingId', async(req, res) => {
+    app.delete('/bookings/:id', async(req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
+      console.log(query)
       const result = await bookingCollection.deleteOne(query)
+      console.log(result)
       res.send(result);
+      
     }) 
 
     console.log(
