@@ -53,7 +53,12 @@ const run = async () => {
 
     app.post('/facilities', async (req, res) => {
       const doc = req.body;
-      const result = await facilitiesCollection.insertOne(doc);
+      delete doc._id;
+      const facilityData = {
+      ...doc,
+      createdAt: new Date(),
+    };
+      const result = await facilitiesCollection.insertOne(facilityData);
       res.send(result)
     })
 
@@ -87,9 +92,10 @@ const run = async () => {
     })
 
     // 6: delete bookings
-    app.delete('/bookings/:userId', async(req, res) => {
-      const userId = req.params.userId;
-      const result = bookingCollection.deleteOne({ userId: userId })
+    app.delete('/bookings/:bookingId', async(req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.deleteOne(query)
       res.send(result);
     }) 
 
