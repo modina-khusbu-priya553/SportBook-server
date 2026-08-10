@@ -111,6 +111,14 @@ const run = async () => {
       res.send(result);
     })
 
+    // 8: delete facilities
+    app.delete('/my-facilities/:userId', async (req, res) => {
+      const userId = req.params.userId;
+      const query = { userId: userId };
+      const result = await facilitiesCollection.deleteOne(query);
+      res.send(result)
+    })
+
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
