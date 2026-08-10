@@ -102,6 +102,16 @@ const run = async () => {
       
     }) 
 
+    // 7: get api for manage bookings
+    app.get('/facilities/:userId', async(req, res) => {
+      const id = req.params.id
+      const query = { userId: new (id) }
+      const result = await facilitiesCollection.findOne(query);
+      res.send(result)
+
+
+    })
+
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
