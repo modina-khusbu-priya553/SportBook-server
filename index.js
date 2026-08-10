@@ -126,8 +126,9 @@ const run = async () => {
       const userId = req.params.userId;
       const query = { userId: userId };
       const modifyUser = req.body;
-      const updatedUser = {$set: modifyUser};
-      const result = await facilitiesCollection.updateOne(query, modifyUser);
+      delete modifyUser._id;
+      const updatedUser = { $set: modifyUser };
+      const result = await facilitiesCollection.updateOne(query, updatedUser);
       res.send(result);
     })
     console.log(
