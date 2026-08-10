@@ -103,13 +103,12 @@ const run = async () => {
     }) 
 
     // 7: get api for manage bookings
-    app.get('/facilities/:userId', async(req, res) => {
-      const id = req.params.id
-      const query = { userId: new (id) }
-      const result = await facilitiesCollection.findOne(query);
-      res.send(result)
-
-
+    app.get('/my-facilities/:userId', async (req, res) => {
+      const userId = req.params.userId;
+      const query = { userId: userId };
+      const cursor = facilitiesCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     })
 
     console.log(
