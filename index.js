@@ -119,6 +119,17 @@ const run = async () => {
       res.send(result)
     })
 
+
+    // 9: Edit facilities
+
+    app.patch('/my-facilities/:userId', async (req, res) => {
+      const userId = req.params.userId;
+      const query = { userId: userId };
+      const modifyUser = req.body;
+      const updatedUser = {$set: modifyUser};
+      const result = await facilitiesCollection.updateOne(query, modifyUser);
+      res.send(result);
+    })
     console.log(
       'Pinged your deployment. You successfully connected to MongoDB!'
     );
