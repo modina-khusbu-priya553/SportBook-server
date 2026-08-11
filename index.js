@@ -3,7 +3,7 @@ const app = express()
 const cors = require("cors");
 const dotenv = require('dotenv')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const { createRemoteJWKSet } = require("jose-cjs");
+const { createRemoteJWKSet, jwtVerify } = require("jose-cjs");
 dotenv.config()
 
 
@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
 });
 
 const JWKS = createRemoteJWKSet(
-   new URL('https://sport-book-ygve.vercel.app//api/auth/jwks')
+   new URL('https://sport-book-ygve.vercel.app/api/auth/jwks')
 )
 
 // middleware
