@@ -82,7 +82,7 @@ const run = async () => {
 
     // 3: post api for add facility
 
-    app.post('/facilities', async (req, res) => {
+    app.post('/facilities', verifyToken, async (req, res) => {
       const doc = req.body;
       delete doc._id;
       const facilityData = {
@@ -95,7 +95,7 @@ const run = async () => {
 
     // 4: post api for booking data
 
-    app.post('/bookings', async (req, res) => {
+    app.post('/bookings', verifyToken, async (req, res) => {
       try {
         const doc = req.body;
         delete doc.status;
