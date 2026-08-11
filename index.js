@@ -114,7 +114,7 @@ const run = async () => {
 
     // 5:: get api for booking data
 
-    app.get('/bookings/:userId', async (req, res) => {
+    app.get('/bookings/:userId', verifyToken, async (req, res) => {
       const userId = req.params.userId;
       const cursor = bookingCollection.find({ userId: userId })
       const result = await cursor.toArray();
@@ -123,7 +123,7 @@ const run = async () => {
     })
 
     // 6: delete bookings
-    app.delete('/bookings/:id', async(req, res) => {
+    app.delete('/bookings/:id', verifyToken, async(req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       console.log(query)
@@ -134,7 +134,7 @@ const run = async () => {
     }) 
 
     // 7: get api for manage bookings
-    app.get('/my-facilities/:userId', async (req, res) => {
+    app.get('/my-facilities/:userId', verifyToken,  async (req, res) => {
       const userId = req.params.userId;
       const query = { userId: userId };
       const cursor = facilitiesCollection.find(query);
@@ -143,7 +143,7 @@ const run = async () => {
     })
 
     // 8: delete facilities
-    app.delete('/my-facilities/:userId', async (req, res) => {
+    app.delete('/my-facilities/:userId', verifyToken, async (req, res) => {
       const userId = req.params.userId;
       const query = { userId: userId };
       const result = await facilitiesCollection.deleteOne(query);
@@ -153,7 +153,7 @@ const run = async () => {
 
     // 9: Edit facilities
 
-    app.patch('/my-facilities/:userId', async (req, res) => {
+    app.patch('/my-facilities/:userId', verifyToken, async (req, res) => {
       const userId = req.params.userId;
       const query = { userId: userId };
       const modifyUser = req.body;
