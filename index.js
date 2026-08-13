@@ -26,21 +26,22 @@ const client = new MongoClient(uri, {
 });
 
 const JWKS = createRemoteJWKSet(
-   new URL('https://sport-book-ygve.vercel.app/api/auth/jwks')
+  new URL('https://sport-book-ygve.vercel.app/api/auth/jwks')
 )
 
 // middleware
-const verifyToken = async(req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const authHeader = req?.headers.authorization
 
-  if(!authHeader) {
-    return res.status(401).json({ message:
-      "Unauthorized"
+  if (!authHeader) {
+    return res.status(401).json({
+      message:
+        "Unauthorized"
     });
   }
   const token = authHeader.split(" ")[1];
 
-  if(!token) {
+  if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
@@ -48,9 +49,9 @@ const verifyToken = async(req, res, next) => {
     const { payload } = await jwtVerify(token, JWKS)
     next()
   } catch (error) {
-   return res.status(401).json({ message: "Forbidden" }); 
+    return res.status(401).json({ message: "Forbidden" });
   }
-  
+
 };
 
 const run = async () => {
@@ -66,7 +67,18 @@ const run = async () => {
 
     // 1: get data from database
     app.get('/facilities', async (req, res) => {
-      const cursor = facilitiesCollection.find();
+      const { search, sport_type } = req.query;
+      const query = {};
+
+      if (search) {
+        query.name = { $regex: search, $options: "i" };
+      }
+
+      if (sport_type) {
+        query.sport_type = { $in: [sport_type] };
+      }
+
+      const cursor = facilitiesCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     })
@@ -86,9 +98,9 @@ const run = async () => {
       const doc = req.body;
       delete doc._id;
       const facilityData = {
-      ...doc,
-      createdAt: new Date(),
-    };
+        ...doc,
+        createdAt: new Date(),
+      };
       const result = await facilitiesCollection.insertOne(facilityData);
       res.send(result)
     })
@@ -123,18 +135,18 @@ const run = async () => {
     })
 
     // 6: delete bookings
-    app.delete('/bookings/:id', verifyToken, async(req, res) => {
+    app.delete('/bookings/:id', verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       console.log(query)
       const result = await bookingCollection.deleteOne(query)
       console.log(result)
       res.send(result);
-      
-    }) 
+
+    })
 
     // 7: get api for manage bookings
-    app.get('/my-facilities/:userId', verifyToken,  async (req, res) => {
+    app.get('/my-facilities/:userId', verifyToken, async (req, res) => {
       const userId = req.params.userId;
       const query = { userId: userId };
       const cursor = facilitiesCollection.find(query);
