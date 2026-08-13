@@ -26,8 +26,8 @@ const client = new MongoClient(uri, {
 });
 
 const JWKS = createRemoteJWKSet(
-  new URL('https://sport-book-ygve.vercel.app/api/auth/jwks')
-)
+  new URL(`${process.env.CLIENT_URI}/api/auth/jwks`)
+);
 
 // middleware
 const verifyToken = async (req, res, next) => {
