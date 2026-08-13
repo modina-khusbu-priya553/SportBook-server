@@ -26,7 +26,7 @@ const client = new MongoClient(uri, {
 });
 
 const JWKS = createRemoteJWKSet(
-  new URL(`${process.env.CLIENT_URI}/api/auth/jwks`)
+  new URL("https://sport-nest-9w11.vercel.app/my-bookings")
 );
 
 // middleware
